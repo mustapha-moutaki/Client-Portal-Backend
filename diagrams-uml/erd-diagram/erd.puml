@@ -1,0 +1,83 @@
+@startuml Mini_ERP_System_ERD_Simple
+
+' ===== TABLES =====
+entity "Users" as users {
+  *id : INT
+  --
+  email : VARCHAR
+  password : VARCHAR
+  full_name : VARCHAR
+  role : ENUM
+  supervisor_id : INT
+  is_active : BOOLEAN
+}
+
+entity "Leads" as leads {
+  *id : INT
+  --
+  name : VARCHAR
+  email : VARCHAR
+  phone : VARCHAR
+  status : ENUM
+  assigned_operator_id : INT
+}
+
+entity "Clients" as clients {
+  *id : INT
+  --
+  user_id : INT
+  name : VARCHAR
+  email : VARCHAR
+  phone : VARCHAR
+  total_income : DECIMAL
+}
+
+entity "Products" as products {
+  *id : INT
+  --
+  name : VARCHAR
+  type : ENUM
+  price : DECIMAL
+}
+
+entity "ClientProducts" as client_products {
+  *id : INT
+  --
+  client_id : INT
+  product_id : INT
+  quantity : INT
+  total_price : DECIMAL
+}
+
+entity "Claims" as claims {
+  *id : INT
+  --
+  client_id : INT
+  product_id : INT
+  status : ENUM
+  assigned_operator_id : INT
+}
+
+entity "Comments" as comments {
+  *id : INT
+  --
+  entity_type : ENUM
+  entity_id : INT
+  content : TEXT
+  user_id : INT
+}
+
+' ===== RELATIONSHIPS =====
+users ||--o{ users : "supervisor_id"
+users ||--o{ leads : "assigned_operator_id"
+users ||--o{ clients : "user_id"
+users ||--o{ claims : "assigned_operator_id"
+users ||--o{ comments : "user_id"
+
+leads ||--o| clients : "converted_to_client_id"
+clients ||--o{ client_products : "client_id"
+products ||--o{ client_products : "product_id"
+clients ||--o{ claims : "client_id"
+claims ||--o{ comments : "entity_id"
+
+@enduml

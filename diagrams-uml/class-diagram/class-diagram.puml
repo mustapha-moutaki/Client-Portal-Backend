@@ -1,0 +1,76 @@
+@startuml Mini_ERP_ClassDiagram
+
+class User {
+  +id: int
+  +email: string
+  +password: string
+  +fullName: string
+  +role: string
+  +supervisorId: int
+  +isActive: bool
+}
+
+class Lead {
+  +id: int
+  +name: string
+  +email: string
+  +phone: string
+  +status: string
+  +assignedOperatorId: int
+  +convertedToClientId: int
+}
+
+class Client {
+  +id: int
+  +userId: int
+  +name: string
+  +email: string
+  +phone: string
+  +totalIncome: decimal
+}
+
+class Product {
+  +id: int
+  +name: string
+  +type: string
+  +price: decimal
+}
+
+class ClientProduct {
+  +id: int
+  +clientId: int
+  +productId: int
+  +quantity: int
+  +totalPrice: decimal
+}
+
+class Claim {
+  +id: int
+  +clientId: int
+  +productId: int
+  +status: string
+  +assignedOperatorId: int
+}
+
+class Comment {
+  +id: int
+  +entityType: string
+  +entityId: int
+  +content: string
+  +userId: int
+}
+
+' Relationships
+User "1" -- "0..*" User : supervisor_id
+User "1" -- "0..*" Lead : assignedOperatorId
+User "1" -- "0..*" Client : userId
+User "1" -- "0..*" Claim : assignedOperatorId
+User "1" -- "0..*" Comment : userId
+
+Lead "0..*" -- "0..1" Client : convertedToClientId
+Client "1" -- "0..*" ClientProduct : clientId
+Product "1" -- "0..*" ClientProduct : productId
+Client "1" -- "0..*" Claim : clientId
+Claim "1" -- "0..*" Comment : entityId
+
+@enduml
