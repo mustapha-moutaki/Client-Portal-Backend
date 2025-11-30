@@ -14,5 +14,4 @@ public class ClaimDtoRequest {
     private String description;
 
     private String fileUrl; // PDF, JPG, PNG, ..
-
 }
