@@ -22,5 +22,4 @@ public class LeadDtoRequest {
 
     @NotNull
     private Long assignedOperatorId; // thee Operator responsible
-
 }

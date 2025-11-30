@@ -13,5 +13,4 @@ public class LeadDtoResponse {
     private LeadStatus status;
     private String notes;
     private Long assignedOperatorId;
-
 }
