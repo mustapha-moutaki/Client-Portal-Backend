@@ -14,7 +14,7 @@ public class ClientDtoResponse {
     private String address;
     private boolean active;
 
-    private List<Long> subscribedProductIds; // client products
+    private List<Long> subscribedProductIds; //  client products
     private List<Long> claimIds;             // client's claims if ixist for sure
 
 }
