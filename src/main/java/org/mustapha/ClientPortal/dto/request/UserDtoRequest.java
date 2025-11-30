@@ -1,10 +1,10 @@
-package org.mustaha.ClientPortal.dto.request;
+package org.mustapha.ClientPortal.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.mustaha.ClientPortal.enums.UserRole;
+import org.mustapha.ClientPortal.enums.UserRole;
 
 @Data
 public class UserDtoRequest {

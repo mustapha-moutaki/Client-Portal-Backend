@@ -1,9 +1,9 @@
-package org.mustaha.ClientPortal.model;
+package org.mustapha.ClientPortal.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.mustaha.ClientPortal.enums.ClaimStatus;
+import org.mustapha.ClientPortal.enums.ClaimStatus;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

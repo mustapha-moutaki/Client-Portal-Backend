@@ -1,4 +1,4 @@
-package org.mustaha.ClientPortal.model;
+package org.mustapha.ClientPortal.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,7 +6,6 @@ import lombok.experimental.SuperBuilder;
 
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

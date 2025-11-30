@@ -1,4 +1,4 @@
-package org.mustaha.ClientPortal.model;
+package org.mustapha.ClientPortal.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Collection;
 
-import org.mustaha.ClientPortal.enums.UserRole;
+import org.mustapha.ClientPortal.enums.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

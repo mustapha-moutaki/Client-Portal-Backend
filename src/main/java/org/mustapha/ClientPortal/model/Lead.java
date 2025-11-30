@@ -1,9 +1,9 @@
-package org.mustaha.ClientPortal.model;
+package org.mustapha.ClientPortal.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.mustaha.ClientPortal.enums.LeadStatus;
+import org.mustapha.ClientPortal.enums.LeadStatus;
 
 
 @Data

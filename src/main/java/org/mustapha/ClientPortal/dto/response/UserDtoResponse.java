@@ -1,7 +1,7 @@
-package org.mustaha.ClientPortal.dto.response;
+package org.mustapha.ClientPortal.dto.response;
 
 import lombok.Data;
-import org.mustaha.ClientPortal.enums.UserRole;
+import org.mustapha.ClientPortal.enums.UserRole;
 
 @Data
 public class UserDtoResponse {

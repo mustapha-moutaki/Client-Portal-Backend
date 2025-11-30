@@ -1,10 +1,8 @@
-package org.mustaha.ClientPortal.model;
+package org.mustapha.ClientPortal.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.mustaha.ClientPortal.model.ClientProduct;
-import org.mustaha.ClientPortal.model.User;
 
 import java.util.List;
 
