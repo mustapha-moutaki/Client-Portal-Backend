@@ -10,8 +10,10 @@ import java.math.BigDecimal;
 @Data
 public class ProductDtoRequest {
 
-    @NotBlank
+    @NotBlank(message = "product name is required")
     private String name;
+
+    private String Description;
 
     @NotNull
     @DecimalMin("0.0")
