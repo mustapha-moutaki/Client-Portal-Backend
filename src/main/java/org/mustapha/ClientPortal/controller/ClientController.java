@@ -35,5 +35,4 @@ public class ClientController {
         return ResponseEntity.ok(clientService.getAllClients(pageable));
     }
 
-    // يمكنك إضافة Delete و GetById لاحقاً
 }

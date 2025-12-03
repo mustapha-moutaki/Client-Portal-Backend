@@ -36,7 +36,7 @@ public class StaffServiceImpl implements StaffService {
             throw new RuntimeException("This username already exists");
         }
 
-        // ✅ 3. Set role: if null, default to OPERATOR
+        // 3. Set role: if null, default to OPERATOR
         UserRole roleToSave = request.getRole() != null ? request.getRole() : UserRole.OPERATOR;
 
         Staff staff = Staff.builder()

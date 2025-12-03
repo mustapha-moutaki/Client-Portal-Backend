@@ -21,6 +21,7 @@ public class WebConfig {
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
+
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
