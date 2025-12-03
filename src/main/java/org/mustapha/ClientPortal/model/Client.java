@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "clients")
 @PrimaryKeyJoinColumn(name = "user_id")
+@Builder
 public class Client extends User {
 
 
@@ -21,10 +22,14 @@ public class Client extends User {
     private String phone;
     private String address;
 
-    // For Bonus: Total Income Calculation
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<ClientProduct> subscribedProducts;
 
     @OneToMany(mappedBy = "client")
     private List<Claim> claims;
+
+    // Minimal constructor for MapStruct mapping
+    public Client(Long id) {
+        super.setId(id);
+    }
 }

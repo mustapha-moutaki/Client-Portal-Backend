@@ -10,4 +10,5 @@ public class ClaimDtoResponse {
     private String description;
     private String fileUrl;
     private String status;
+    private Long assignedStaffId;
 }

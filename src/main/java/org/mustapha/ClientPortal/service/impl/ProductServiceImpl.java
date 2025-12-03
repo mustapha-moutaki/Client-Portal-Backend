@@ -21,8 +21,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDtoResponse createProduct(ProductDtoRequest request) {
+
+        if (productRepository.existsByName(request.getName())) {
+            throw new RuntimeException("Product with this name already exists");
+        }
+
         Product product = productMapper.toEntity(request);
+
         productRepository.save(product);
+
         return productMapper.toDto(product);
     }
 
@@ -33,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
 
         product.setName(request.getName());
         product.setDescription(request.getDescription());
-        product.setBasePrice(request.getPrice());
+        product.setBasePrice(request.getBasePrice());
 
         productRepository.save(product);
         return productMapper.toDto(product);

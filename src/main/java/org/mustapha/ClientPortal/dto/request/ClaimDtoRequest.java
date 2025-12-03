@@ -8,13 +8,15 @@ import org.mustapha.ClientPortal.enums.ClaimStatus;
 @Data
 public class ClaimDtoRequest {
 
-    @NotBlank(message = "client is required")
+    @NotNull(message = "client is required")
     private Long clientId;
-
+    @NotBlank(message = "title is required")
     private String title;
     private ClaimStatus status = ClaimStatus.IN_REVIEW;
-    @NotBlank
+
     private String description;
 
-    private String fileUrl; // PDF, JPG, PNG, ..
+    private String fileUrl; // PDF, JPG, PNG,  maps to attachmentUrl
+
+    private Long assignedStaffId;
 }

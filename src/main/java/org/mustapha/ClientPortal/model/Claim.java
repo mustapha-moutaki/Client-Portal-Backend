@@ -31,6 +31,6 @@ public class Claim extends BaseEntity{
 
     // Operator or Supervisor handling this claim
     @ManyToOne
-    @JoinColumn(name = "assigned_staff_id")
+    @JoinColumn(name = "assigned_staff_id", nullable = true)
     private Staff assignedStaff;
 }
