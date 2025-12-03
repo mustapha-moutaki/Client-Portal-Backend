@@ -236,7 +236,6 @@ comments
 ├── content
 └── created_at
 ```
-
 ---
 
 ## 🚀 Getting Started
