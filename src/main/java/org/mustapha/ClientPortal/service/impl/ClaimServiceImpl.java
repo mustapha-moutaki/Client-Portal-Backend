@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.mustapha.ClientPortal.dto.request.ClaimDtoRequest;
 import org.mustapha.ClientPortal.dto.response.ClaimDtoResponse;
+import org.mustapha.ClientPortal.enums.ClaimStatus;
 import org.mustapha.ClientPortal.exception.ResourceNotFoundException;
 import org.mustapha.ClientPortal.mapper.ClaimMapper;
 import org.mustapha.ClientPortal.model.Claim;
@@ -27,6 +28,18 @@ public class ClaimServiceImpl implements ClaimService {
     @Override
     public ClaimDtoResponse createClaim(ClaimDtoRequest request) {
         Claim claim = claimMapper.toEntity(request);
+
+
+        if (request.getStatus() != null && !request.getStatus().isEmpty()) {
+            try {
+                claim.setStatus(ClaimStatus.valueOf(request.getStatus().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                claim.setStatus(ClaimStatus.IN_REVIEW);
+            }
+        } else {
+            claim.setStatus(ClaimStatus.IN_REVIEW);
+        }
+
         claimRepository.save(claim);
         return claimMapper.toDto(claim);
     }
@@ -36,33 +49,35 @@ public class ClaimServiceImpl implements ClaimService {
         Claim claim = claimRepository.findById(claimId)
                 .orElseThrow(() -> new ResourceNotFoundException("Claim not found with id: " + claimId));
 
-        // Update all fields if present in the request
-        if (request.getTitle() != null) {
-            claim.setTitle(request.getTitle());
+        if (request.getTitle() != null) claim.setTitle(request.getTitle());
+        if (request.getDescription() != null) claim.setDescription(request.getDescription());
+
+
+        if (request.getAmount() != null) {
+            claim.setAmount(request.getAmount());
         }
 
-        if (request.getDescription() != null) {
-            claim.setDescription(request.getDescription());
-        }
 
-        if (request.getStatus() != null) {
-            claim.setStatus(request.getStatus());
+        if (request.getClaimDate() != null) {
+            claim.setClaimDate(request.getClaimDate());
         }
 
         if (request.getFileUrl() != null) {
             claim.setAttachmentUrl(request.getFileUrl());
         }
 
-        if (request.getAssignedStaffId() != null) {
-            Staff staff = staffRepository.findById(request.getAssignedStaffId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + request.getAssignedStaffId()));
-            claim.setAssignedStaff(staff);
+        if (request.getStatus() != null && !request.getStatus().isEmpty()) {
+            try {
+                claim.setStatus(ClaimStatus.valueOf(request.getStatus().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+            }
         }
+
+
 
         claimRepository.save(claim);
         return claimMapper.toDto(claim);
     }
-
 
     @Override
     public void deleteClaim(Long claimId) {

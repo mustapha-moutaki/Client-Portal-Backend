@@ -10,6 +10,7 @@ import org.mustapha.ClientPortal.service.ClaimService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +23,9 @@ public class ClaimController {
     private final ClaimService claimService;
 
     @PostMapping
-    public ResponseEntity<ClaimDtoResponse> createClaim(@Valid @NonNull @RequestBody ClaimDtoRequest request) {
-        return ResponseEntity.ok(claimService.createClaim(request));
+    public ResponseEntity<?> createClaim(@Valid @RequestBody ClaimDtoRequest request) {
+        var created = claimService.createClaim(request);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

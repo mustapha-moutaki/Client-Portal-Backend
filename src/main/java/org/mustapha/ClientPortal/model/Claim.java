@@ -2,35 +2,65 @@ package org.mustapha.ClientPortal.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.mustapha.ClientPortal.enums.ClaimStatus;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
+import java.math.BigDecimal; // ضروري للمبلغ
+import java.time.LocalDate;  // ضروري للتاريخ
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "claims")
-public class Claim extends BaseEntity{
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Claim {
 
-    @Column(nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 1000)
     private String description;
 
     @Enumerated(EnumType.STRING)
     private ClaimStatus status;
 
-    private String attachmentUrl; // For PDF/Image file path
+    private String attachmentUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
+
+    private BigDecimal amount;
+
+
+    private LocalDate claimDate;
+
+
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
     private Client client;
 
-    // Operator or Supervisor handling this claim
-    @ManyToOne
-    @JoinColumn(name = "assigned_staff_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "staff_id")
     private Staff assignedStaff;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+        if (this.claimDate == null) {
+            this.claimDate = LocalDate.now();
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

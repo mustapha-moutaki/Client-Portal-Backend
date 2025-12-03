@@ -1,10 +1,10 @@
 spring:
   application:
     name: ClientPortal
-#  security:
-#    user:
-#      name: user
-#      password: password
+  security:
+    user:
+      name: user
+      password: password
 
   main:
     allow-bean-definition-overriding: true

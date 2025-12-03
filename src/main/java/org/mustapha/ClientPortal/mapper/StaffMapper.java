@@ -12,17 +12,16 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public abstract class StaffMapper {
-// here we use abstarct mapper so we can use speacial methods to convert between objects and primitives;;
+
     @Autowired
     protected UserRepository userRepository;
 
+    // ✅ FIXED: Removed the 'ignore' lines for role, username, email, password.
+    // Now MapStruct will automatically map them because names match.
+
     @Mapping(source = "supervisorId", target = "supervisor", qualifiedByName = "mapSupervisor")
-    @Mapping(target = "username", ignore = true) // inherited fields
-    @Mapping(target = "password", ignore = true)
-    @Mapping(target = "email", ignore = true)
-    @Mapping(target = "role", ignore = true)
-    @Mapping(target = "active", ignore = true)
-    @Mapping(target = "operators", ignore = true)
+    @Mapping(target = "active", ignore = true)    // Keep this if you set active manually in Service
+    @Mapping(target = "operators", ignore = true) // Keep this
     public abstract Staff toEntity(StaffDtoRequest dto);
 
     @Mapping(source = "supervisor.id", target = "supervisorId")
@@ -31,7 +30,9 @@ public abstract class StaffMapper {
 
     @Named("mapSupervisor")
     protected Staff mapSupervisor(Long supervisorId) {
-        if (supervisorId == null) return null;
+        // If ID is null or 0, return null
+        if (supervisorId == null || supervisorId == 0) return null;
+
         return userRepository.findById(supervisorId)
                 .filter(u -> u instanceof Staff)
                 .map(u -> (Staff) u)

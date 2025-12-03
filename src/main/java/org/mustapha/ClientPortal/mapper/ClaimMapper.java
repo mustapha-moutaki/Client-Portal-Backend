@@ -1,24 +1,39 @@
 package org.mustapha.ClientPortal.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import org.mustapha.ClientPortal.dto.request.ClaimDtoRequest;
 import org.mustapha.ClientPortal.dto.response.ClaimDtoResponse;
 import org.mustapha.ClientPortal.model.Claim;
+import org.mustapha.ClientPortal.model.Client;
+import org.mustapha.ClientPortal.repository.ClientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
-public interface ClaimMapper {
+public abstract class ClaimMapper {
 
-    // Entity -> DTO
-    @Mapping(source = "client.id", target = "clientId")
-    @Mapping(source = "attachmentUrl", target = "fileUrl")
-    @Mapping(source = "assignedStaff.id", target = "assignedStaffId")
-    ClaimDtoResponse toDto(Claim claim);
+    @Autowired
+    protected ClientRepository clientRepository;
 
-    // DTO -> Entity
-    @Mapping(target = "client", expression = "java(new Client(request.getClientId()))")
+    // --- To Entity ---
+    @Mapping(source = "clientId", target = "client", qualifiedByName = "mapClient")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "assignedStaff", ignore = true)
     @Mapping(source = "fileUrl", target = "attachmentUrl")
-    @Mapping(source = "assignedStaffId", target = "assignedStaff.id")
-    Claim toEntity(ClaimDtoRequest request);
-}
+    @Mapping(target = "status", ignore = true)
+    public abstract Claim toEntity(ClaimDtoRequest dto);
 
+
+    @Mapping(source = "client.id", target = "clientId")
+    @Mapping(source = "assignedStaff.id", target = "assignedStaffId")
+    @Mapping(source = "attachmentUrl", target = "fileUrl")
+
+    public abstract ClaimDtoResponse toDto(Claim claim);
+
+    @Named("mapClient")
+    protected Client mapClient(Long clientId) {
+        if (clientId == null) return null;
+        return clientRepository.findById(clientId).orElse(null);
+    }
+}

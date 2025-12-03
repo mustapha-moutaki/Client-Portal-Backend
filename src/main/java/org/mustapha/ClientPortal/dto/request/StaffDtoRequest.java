@@ -2,6 +2,7 @@ package org.mustapha.ClientPortal.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.mustapha.ClientPortal.enums.UserRole;
 
 @Data
 public class StaffDtoRequest {
@@ -22,5 +23,6 @@ public class StaffDtoRequest {
     private String password;
 
     private Long supervisorId;
+    private UserRole role;
 }
 

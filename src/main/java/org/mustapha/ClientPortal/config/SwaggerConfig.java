@@ -13,7 +13,7 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("SupplyChain API")
+                        .title("clientPortal")
                         .version("1.0")
                         .description("Documentation API pour la gestion des clients"));
     }

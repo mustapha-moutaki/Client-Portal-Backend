@@ -11,6 +11,7 @@ import org.mustapha.ClientPortal.repository.StaffRepository;
 import org.mustapha.ClientPortal.service.StaffService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder; // ✅ 1. Important import
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,28 +22,45 @@ public class StaffServiceImpl implements StaffService {
 
     private final StaffRepository staffRepository;
     private final StaffMapper staffMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public StaffDtoResponse createStaff(StaffDtoRequest request) {
-        Optional<Staff> staffexist = staffRepository.findByEmail(request.getEmail());
-        if(staffexist.isPresent()){
-         throw  new RuntimeException("this email is already exist");
+        // Check if email already exists
+        if(staffRepository.findByEmail(request.getEmail()).isPresent()){
+            throw new RuntimeException("This email already exists");
         }
+
+        // Check if username already exists
+        if(staffRepository.findByUsername(request.getUsername()).isPresent()){
+            throw new RuntimeException("This username already exists");
+        }
+
+        // ✅ 3. Set role: if null, default to OPERATOR
+        UserRole roleToSave = request.getRole() != null ? request.getRole() : UserRole.OPERATOR;
+
         Staff staff = Staff.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .password(request.getPassword())
-                .role(UserRole.OPERATOR) // default role
+                // ✅ 4. Encode password
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(roleToSave)
                 .active(true)
                 .build();
+
+        // If a supervisor is selected
+        if (request.getSupervisorId() != null && request.getSupervisorId() != 0) {
+            Staff supervisor = staffRepository.findById(request.getSupervisorId())
+                    .orElse(null); // or throw exception if mandatory
+            staff.setSupervisor(supervisor);
+        }
 
         staffRepository.save(staff);
 
         return staffMapper.toDto(staff);
     }
-
 
     @Override
     public StaffDtoResponse updateStaff(Long staffId, StaffDtoRequest request) {
@@ -52,12 +70,19 @@ public class StaffServiceImpl implements StaffService {
         staff.setFirstName(request.getFirstName());
         staff.setLastName(request.getLastName());
 
-        if (request.getSupervisorId() != null) {
+        // Note: Do not update password here unless you create a separate function
+
+        // Update role if provided
+        if (request.getRole() != null) {
+            staff.setRole(request.getRole());
+        }
+
+        if (request.getSupervisorId() != null && request.getSupervisorId() != 0) {
             Staff supervisor = staffRepository.findById(request.getSupervisorId())
                     .orElseThrow(() -> new ResourceNotFoundException("Supervisor not found with id: " + request.getSupervisorId()));
             staff.setSupervisor(supervisor);
         } else {
-            staff.setSupervisor(null);
+            staff.setSupervisor(null); // remove supervisor
         }
 
         return staffMapper.toDto(staffRepository.save(staff));
