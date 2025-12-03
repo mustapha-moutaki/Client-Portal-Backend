@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList; // Added import
 import java.util.List;
 
 @Data
@@ -14,22 +15,18 @@ import java.util.List;
 @Entity
 @Table(name = "clients")
 @PrimaryKeyJoinColumn(name = "user_id")
-@Builder
-public class Client extends User {
 
+public class Client extends User {
 
     private String companyName;
     private String phone;
     private String address;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private List<ClientProduct> subscribedProducts;
+    @Builder.Default // Initialize list to avoid nulls
+    private List<ClientProduct> subscribedProducts = new ArrayList<>();
 
     @OneToMany(mappedBy = "client")
-    private List<Claim> claims;
-
-    // Minimal constructor for MapStruct mapping
-    public Client(Long id) {
-        super.setId(id);
-    }
+    @Builder.Default
+    private List<Claim> claims = new ArrayList<>();
 }

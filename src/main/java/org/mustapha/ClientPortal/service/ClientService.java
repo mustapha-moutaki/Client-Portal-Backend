@@ -6,11 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ClientService {
-
     ClientDtoResponse createClient(ClientDtoRequest request);
     ClientDtoResponse updateClient(Long clientId, ClientDtoRequest request);
     void deleteClient(Long clientId);
     ClientDtoResponse getClientById(Long clientId);
     Page<ClientDtoResponse> getAllClients(Pageable pageable);
-
+    void convertLeadToClient(Long leadId);
 }
