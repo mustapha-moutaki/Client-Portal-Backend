@@ -29,17 +29,30 @@ public class ClaimController {
     private final ClaimService claimService;
 
     // 1. Create Claim (Client Only - Multipart/Form-Data)
+//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @PreAuthorize("hasAuthority('CLIENT')")
+//    @Operation(summary = "Create a new claim", description = "Upload a file and JSON data. Only for Clients.")
+//    public ResponseEntity<ClaimDtoResponse> createClaim(
+//            @RequestPart("claim") @Valid ClaimDtoRequest request,
+//            @RequestPart(value = "file", required = false) MultipartFile file,
+//            Authentication authentication
+//    ) {
+//        var created = claimService.createClaim(request, file, authentication.getName());
+//        return new ResponseEntity<>(created, HttpStatus.CREATED);
+//    }
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('CLIENT')")
+    @PreAuthorize("hasRole('CLIENT')")
     @Operation(summary = "Create a new claim", description = "Upload a file and JSON data. Only for Clients.")
     public ResponseEntity<ClaimDtoResponse> createClaim(
             @RequestPart("claim") @Valid ClaimDtoRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file,
             Authentication authentication
     ) {
-        var created = claimService.createClaim(request, file, authentication.getName());
+
+        ClaimDtoResponse created = claimService.createClaim(request, file, authentication.getName());
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
+
 
     // 2. View All/My Claims (Smart Filter)
     @GetMapping
@@ -55,14 +68,14 @@ public class ClaimController {
 
     // 3. View Single Claim
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR', 'OPERATOR', 'CLIENT')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERATOR', 'CLIENT')")
     public ResponseEntity<ClaimDtoResponse> getClaim(@PathVariable Long id) {
         return ResponseEntity.ok(claimService.getClaimById(id));
     }
 
     // 4. Update Details (Title/Desc/Amount)
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERATOR')")
     @Operation(summary = "Update claim details", description = "Edit title, description, or amount.")
     public ResponseEntity<ClaimDtoResponse> updateClaim(
             @PathVariable Long id,
@@ -74,7 +87,7 @@ public class ClaimController {
     // 5. Update Status (Workflow: SUBMITTED -> IN_REVIEW -> RESOLVED)
     // ADDED THIS: Needed for Operators to work quickly
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR', 'OPERATOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERATOR')")
     @Operation(summary = "Update claim status", description = "Change status to IN_REVIEW or RESOLVED")
     public ResponseEntity<ClaimDtoResponse> updateStatus(
             @PathVariable Long id,
@@ -85,7 +98,7 @@ public class ClaimController {
 
     // 6. Assign Operator (Supervisor/Admin Only)
     @PutMapping("/{id}/assign/{operatorId}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERVISOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR')")
     @Operation(summary = "Assign claim", description = "Assign a claim to a specific Operator.")
     public ResponseEntity<ClaimDtoResponse> assignClaim(
             @PathVariable Long id,
@@ -96,7 +109,7 @@ public class ClaimController {
 
     // 7. Delete Claim (Admin Only)
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteClaim(@PathVariable Long id) {
         claimService.deleteClaim(id);
         return ResponseEntity.noContent().build();

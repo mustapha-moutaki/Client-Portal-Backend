@@ -10,9 +10,11 @@ import org.mustapha.ClientPortal.mapper.ClaimMapper;
 import org.mustapha.ClientPortal.model.Claim;
 import org.mustapha.ClientPortal.model.Client;
 import org.mustapha.ClientPortal.model.Staff; // Assuming Operator is Staff or User
+import org.mustapha.ClientPortal.model.User;
 import org.mustapha.ClientPortal.repository.ClaimRepository;
 import org.mustapha.ClientPortal.repository.ClientRepository;
 import org.mustapha.ClientPortal.repository.StaffRepository; // Or UserRepository
+import org.mustapha.ClientPortal.repository.UserRepository;
 import org.mustapha.ClientPortal.service.ClaimService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,18 +37,48 @@ public class ClaimServiceImpl implements ClaimService {
     private final ClaimMapper claimMapper;
     private final StaffRepository staffRepository; // Used to find Operators
     private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
 
     // --- 1. CREATE CLAIM (with File) ---
+//        @Override
+//        public ClaimDtoResponse createClaim(ClaimDtoRequest request, MultipartFile file, String userEmail) {
+//            Claim claim = claimMapper.toEntity(request);
+//
+//            // Link Client by Email
+//            Client client = clientRepository.findByEmail(userEmail)
+//                    .orElseThrow(() -> new ResourceNotFoundException("Client not found with email: " + userEmail));
+//            claim.setClient(client);
+//
+//            // Handle File
+//            if (file != null && !file.isEmpty()) {
+//                String fileUrl = saveFile(file);
+//                claim.setAttachmentUrl(fileUrl);
+//            }
+//
+//            // Default Status
+//            claim.setStatus(ClaimStatus.SUBMITTED);
+//
+//            claimRepository.save(claim);
+//            return claimMapper.toDto(claim);
+//        }
+    // داخل ClaimServiceImpl أو مكان createClaim
     @Override
-    public ClaimDtoResponse createClaim(ClaimDtoRequest request, MultipartFile file, String userEmail) {
+    public ClaimDtoResponse createClaim(ClaimDtoRequest request, MultipartFile file, String username) {
         Claim claim = claimMapper.toEntity(request);
 
-        // Link Client by Email
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
+
+        String userEmail = user.getEmail();
+
+
         Client client = clientRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with email: " + userEmail));
+
         claim.setClient(client);
 
-        // Handle File
+        // Handle File Upload
         if (file != null && !file.isEmpty()) {
             String fileUrl = saveFile(file);
             claim.setAttachmentUrl(fileUrl);
@@ -58,6 +90,7 @@ public class ClaimServiceImpl implements ClaimService {
         claimRepository.save(claim);
         return claimMapper.toDto(claim);
     }
+
 
     // --- 2. ASSIGN CLAIM (Supervisor) ---
     @Override

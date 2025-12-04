@@ -10,7 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ClaimService {
 
     // Updated to support File Upload and User Email link
-    ClaimDtoResponse createClaim(ClaimDtoRequest request, MultipartFile file, String userEmail);
+//    ClaimDtoResponse createClaim(ClaimDtoRequest request, MultipartFile file, String userEmail);
+    ClaimDtoResponse createClaim(ClaimDtoRequest request, MultipartFile file, String username);
 
     // Standard Update
     ClaimDtoResponse updateClaim(Long claimId, ClaimDtoRequest request);

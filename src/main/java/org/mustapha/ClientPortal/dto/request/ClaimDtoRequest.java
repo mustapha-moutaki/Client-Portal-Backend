@@ -31,7 +31,7 @@ import java.time.LocalDate;
 @Data
 public class ClaimDtoRequest {
 
-    @NotNull(message = "Client ID is required")
+
     private Long clientId;
 
     @NotBlank(message = "Title is required")
