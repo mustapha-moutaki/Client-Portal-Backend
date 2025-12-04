@@ -26,7 +26,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -182,4 +184,14 @@ public class ClaimServiceImpl implements ClaimService {
             throw new RuntimeException("Failed to upload file");
         }
     }
+
+    public List<ClaimDtoResponse> getClaimsByClientId(Long clientId) {
+        List<Claim> claims = claimRepository.findByClientId(clientId); // you need this repository method
+        return claims.stream()
+                .map(claimMapper::toDto)
+                .toList();
+    }
+
+
+
 }

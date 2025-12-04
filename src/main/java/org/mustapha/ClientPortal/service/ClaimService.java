@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface ClaimService {
 
     // Updated to support File Upload and User Email link
@@ -28,4 +30,5 @@ public interface ClaimService {
 
     // One method to rule them all (Role based logic)
     Page<ClaimDtoResponse> getClaimsBasedOnRole(Pageable pageable, Authentication auth);
+    List<ClaimDtoResponse> getClaimsByClientId(Long clientId);
 }

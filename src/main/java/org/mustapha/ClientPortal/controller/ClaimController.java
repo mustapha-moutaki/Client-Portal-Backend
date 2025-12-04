@@ -20,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/claims")
 @RequiredArgsConstructor
@@ -113,5 +115,12 @@ public class ClaimController {
     public ResponseEntity<Void> deleteClaim(@PathVariable Long id) {
         claimService.deleteClaim(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/client/{clientId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERVISOR', 'OPERATOR', 'CLIENT')")
+    public ResponseEntity<List<ClaimDtoResponse>> getClaimsByClientId(@PathVariable Long clientId) {
+        List<ClaimDtoResponse> claims = claimService.getClaimsByClientId(clientId);
+        return ResponseEntity.ok(claims);
     }
 }
