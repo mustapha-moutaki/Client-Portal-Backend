@@ -3,6 +3,7 @@ package org.mustapha.ClientPortal.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.mustapha.ClientPortal.dto.request.LeadDtoRequest;
 import org.mustapha.ClientPortal.dto.response.LeadDtoResponse;
+import org.mustapha.ClientPortal.enums.LeadStatus;
 import org.mustapha.ClientPortal.exception.ResourceNotFoundException;
 import org.mustapha.ClientPortal.mapper.LeadMapper;
 import org.mustapha.ClientPortal.model.Lead;
@@ -60,4 +61,24 @@ public class LeadServiceImpl implements LeadService {
         return leadRepository.findAll(pageable)
                 .map(leadMapper::toDto);
     }
+
+    @Override
+    public LeadDtoResponse updateLeadStatus(Long leadId, String status) {
+        Lead lead = leadRepository.findById(leadId)
+                .orElseThrow(() -> new ResourceNotFoundException("Lead not found with id: " + leadId));
+
+        //convert Strin to enumm
+        LeadStatus leadStatus;
+        try {
+            leadStatus = LeadStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid lead status: " + status);
+        }
+
+        lead.setStatus(leadStatus);
+        leadRepository.save(lead);
+
+        return leadMapper.toDto(lead);
+    }
+
 }

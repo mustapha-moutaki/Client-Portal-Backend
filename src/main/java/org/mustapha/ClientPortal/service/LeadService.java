@@ -12,4 +12,6 @@ public interface LeadService {
     void deleteLead(Long leadId);
     LeadDtoResponse getLeadById(Long leadId);
     Page<LeadDtoResponse> getAllLeads(Pageable pageable);
+
+    LeadDtoResponse updateLeadStatus(Long leadId, String status);
 }
